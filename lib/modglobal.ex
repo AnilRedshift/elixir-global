@@ -17,19 +17,6 @@ defmodule Modglobal do
 
   `Modglobal.set(__MODULE__, key, value)`, etc...
   """
-  use Application
-
-  @impl true
-  @doc ~S"""
-  The application entrypoint, used to start the ModGlobal genserver.
-  This should not be called directly, but instead via the extra_applications
-  """
-  def start(_type, _args) do
-    children = [
-      {Modglobal.Server, name: Modglobal.Server}
-    ]
-    Supervisor.start_link(children, strategy: :one_for_one)
-  end
 
   @doc ~S"""
   Deletes a given key from the module, and returns the value deleted.
