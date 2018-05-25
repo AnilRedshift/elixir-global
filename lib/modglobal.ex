@@ -14,6 +14,10 @@ defmodule Modglobal do
     GenServer.call(Modglobal.Server, {:get, module: module, key: key, default: default})
   end
 
+  def has?(module, key) do
+    GenServer.call(Modglobal.Server, {:has?, module: module, key: key})
+  end
+
   def set(module, key, value) do
     GenServer.call(Modglobal.Server, {:set, module: module, key: key, value: value})
     nil
@@ -21,9 +25,10 @@ defmodule Modglobal do
 
   defmacro __using__(_options) do
     quote do
-      defp set_global(key, value), do: Modglobal.set(__MODULE__, key, value)
       defp get_global(key), do: Modglobal.get(__MODULE__, key)
       defp get_global(key, default), do: Modglobal.get(__MODULE__, key, default)
+      defp has_global?(key), do: Modglobal.has?(__MODULE__, key)
+      defp set_global(key, value), do: Modglobal.set(__MODULE__, key, value)
     end
   end
 end

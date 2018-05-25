@@ -3,6 +3,7 @@ defmodule DummyModule do
   def get(key), do: get_global(key)
   def get(key, default), do: get_global(key, default)
   def set(key, value), do: set_global(key, value)
+  def has?(key), do: has_global?(key)
 end
 
 defmodule ModglobalTest do
@@ -31,5 +32,14 @@ defmodule ModglobalTest do
   test "set and retrieve nil as a value" do
     DummyModule.set("test", nil)
     assert DummyModule.get("test", "cat") == nil
+  end
+
+  test "has key returns false when not present" do
+    assert DummyModule.has?("test") == false
+  end
+
+  test "has key returns true when present" do
+    DummyModule.set("test", "cat")
+    assert DummyModule.has?("test") == true
   end
 end
