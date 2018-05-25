@@ -27,13 +27,23 @@ defmodule Modglobal do
     nil
   end
 
-  defmacro __using__(_options) do
-    quote do
-      defp delete_global(key), do: Modglobal.delete(__MODULE__, key)
-      defp get_global(key), do: Modglobal.get(__MODULE__, key)
-      defp get_global(key, default), do: Modglobal.get(__MODULE__, key, default)
-      defp has_global?(key), do: Modglobal.has?(__MODULE__, key)
-      defp set_global(key, value), do: Modglobal.set(__MODULE__, key, value)
+  defmacro __using__(options) do
+    if (match?([public: :true], options)) do
+      quote do
+        def delete_global(key), do: Modglobal.delete(__MODULE__, key)
+        def get_global(key), do: Modglobal.get(__MODULE__, key)
+        def get_global(key, default), do: Modglobal.get(__MODULE__, key, default)
+        def has_global?(key), do: Modglobal.has?(__MODULE__, key)
+        def set_global(key, value), do: Modglobal.set(__MODULE__, key, value)
+      end
+    else
+      quote do
+        defp delete_global(key), do: Modglobal.delete(__MODULE__, key)
+        defp get_global(key), do: Modglobal.get(__MODULE__, key)
+        defp get_global(key, default), do: Modglobal.get(__MODULE__, key, default)
+        defp has_global?(key), do: Modglobal.has?(__MODULE__, key)
+        defp set_global(key, value), do: Modglobal.set(__MODULE__, key, value)
+      end
     end
   end
 end

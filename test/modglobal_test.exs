@@ -1,4 +1,8 @@
 defmodule DummyModule do
+  use Modglobal, public: true
+end
+
+defmodule DummyPrivateModule do
   use Modglobal
   def delete(key), do: delete_global(key)
   def get(key), do: get_global(key)
@@ -17,42 +21,49 @@ defmodule ModglobalTest do
     :ok
   end
 
-  test "get returns the passed in default" do
-    assert DummyModule.get("test", "cat") == "cat"
+  describe "get" do
+    test "returns the passed in default" do
+      assert DummyModule.get_global("test", "cat") == "cat"
+    end
+
+    test "returns nil if a default isn't present" do
+      assert DummyModule.get_global("test") == nil
+    end
   end
 
-  test "get returns nil if a default isn't present" do
-    assert DummyModule.get("test") == nil
+  describe "set" do
+    test "a key to a value" do
+      DummyModule.set_global("test", "cat")
+      assert DummyModule.get_global("test") == "cat"
+    end
+
+    test "sets nil to a value" do
+      DummyModule.set_global("test", nil)
+      assert DummyModule.get_global("test", "cat") == nil
+    end
   end
 
-  test "set and retreive the value" do
-    DummyModule.set("test", "cat")
-    assert DummyModule.get("test") == "cat"
+  describe "has?" do
+    test "returns false when not present" do
+      assert DummyModule.has_global?("test") == false
+    end
+
+    test "returns true when present" do
+      DummyModule.set_global("test", "cat")
+      assert DummyModule.has_global?("test") == true
+    end
   end
 
-  test "set and retrieve nil as a value" do
-    DummyModule.set("test", nil)
-    assert DummyModule.get("test", "cat") == nil
-  end
+  describe "delete" do
+    test "no-ops if not present" do
+      assert DummyModule.delete_global("test") == nil
+      assert DummyModule.has_global?("test") == false
+    end
 
-  test "has key returns false when not present" do
-    assert DummyModule.has?("test") == false
-  end
-
-  test "has key returns true when present" do
-    DummyModule.set("test", "cat")
-    assert DummyModule.has?("test") == true
-  end
-
-  test "delete no-ops if not present" do
-    assert DummyModule.delete("test") == nil
-    assert DummyModule.has?("test") == false
-  end
-
-  test "delete removes the key" do
-    DummyModule.set("test", "cat")
-    assert DummyModule.delete("test") == "cat"
-    assert DummyModule.has?("test") == false
-
+    test "removes the key" do
+      DummyModule.set_global("test", "cat")
+      assert DummyModule.delete_global("test") == "cat"
+      assert DummyModule.has_global?("test") == false
+    end
   end
 end
