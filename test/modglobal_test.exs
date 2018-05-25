@@ -88,4 +88,13 @@ defmodule ModglobalTest do
       assert DummyPrivateModule.has?("test") == false
     end
   end
+
+  describe "uniqueness" do
+    test "make sure that changing one modules variables doesn't affect the other" do
+      DummyModule.set_global("test", "dogs")
+      DummyPrivateModule.set("test", "cats")
+      assert DummyModule.get_global("test") == "dogs"
+      assert DummyPrivateModule.get("test") == "cats"
+    end
+  end
 end
