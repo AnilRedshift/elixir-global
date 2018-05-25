@@ -9,6 +9,10 @@ defmodule Modglobal do
     Supervisor.start_link(children, strategy: :one_for_one)
   end
 
+  def delete(module, key) do
+    GenServer.call(Modglobal.Server, {:delete, module: module, key: key})
+  end
+
   def get(module, key), do: get(module, key, nil)
   def get(module, key, default) do
     GenServer.call(Modglobal.Server, {:get, module: module, key: key, default: default})
@@ -25,6 +29,7 @@ defmodule Modglobal do
 
   defmacro __using__(_options) do
     quote do
+      defp delete_global(key), do: Modglobal.delete(__MODULE__, key)
       defp get_global(key), do: Modglobal.get(__MODULE__, key)
       defp get_global(key, default), do: Modglobal.get(__MODULE__, key, default)
       defp has_global?(key), do: Modglobal.has?(__MODULE__, key)

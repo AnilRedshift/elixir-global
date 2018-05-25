@@ -11,6 +11,12 @@ defmodule Modglobal.Server do
   end
 
   @impl true
+  def handle_call({:delete, module: module, key: key}, _from, state) do
+    {value, state} = pop_in(state, [Access.key(module, %{}), key])
+    {:reply, value, state}
+  end
+
+  @impl true
   def handle_call({:get, module: module, key: key, default: default}, _from, state) do
     value = state
     |> Map.get(module, %{})

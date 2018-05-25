@@ -1,9 +1,10 @@
 defmodule DummyModule do
   use Modglobal
+  def delete(key), do: delete_global(key)
   def get(key), do: get_global(key)
+  def has?(key), do: has_global?(key)
   def get(key, default), do: get_global(key, default)
   def set(key, value), do: set_global(key, value)
-  def has?(key), do: has_global?(key)
 end
 
 defmodule ModglobalTest do
@@ -41,5 +42,17 @@ defmodule ModglobalTest do
   test "has key returns true when present" do
     DummyModule.set("test", "cat")
     assert DummyModule.has?("test") == true
+  end
+
+  test "delete no-ops if not present" do
+    assert DummyModule.delete("test") == nil
+    assert DummyModule.has?("test") == false
+  end
+
+  test "delete removes the key" do
+    DummyModule.set("test", "cat")
+    assert DummyModule.delete("test") == "cat"
+    assert DummyModule.has?("test") == false
+
   end
 end
