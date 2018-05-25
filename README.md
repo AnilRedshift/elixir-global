@@ -1,11 +1,10 @@
 # Modglobal
 
-**TODO: Add description**
+Modglobal provides a simple key:value store that is unique per module. You should use this when you would otherwise need to spin up a GenServer to track some simple state.
+
+Full documentation: [https://hexdocs.pm/modglobal](https://hexdocs.pm/modglobal).
 
 ## Installation
-
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `modglobal` to your list of dependencies in `mix.exs`:
 
 ```elixir
 def deps do
@@ -15,7 +14,18 @@ def deps do
 end
 ```
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at [https://hexdocs.pm/modglobal](https://hexdocs.pm/modglobal).
+## Usage
+```elixir
+defmodule Greeter do
+  use Modglobal
 
+  def save_name(name) do
+    set_global(:name, name)
+  end
+
+  def greet() do
+    name = get_global(:name, "world")
+    IO.puts("Hello, #{name}!")
+  end
+end
+```

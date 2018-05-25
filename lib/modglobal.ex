@@ -4,7 +4,6 @@ defmodule Modglobal do
   It is useful when you would otherwise need a GenServer to hold onto some state
 
   ## Setup
-  Add `:modglobal` to your `:extra_applications` parameter mix.exs
   For each module you need globals, add `use Modglobal`.
   ## Usage
   `YourModule.set_global(key, value)`
