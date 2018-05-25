@@ -66,4 +66,26 @@ defmodule ModglobalTest do
       assert DummyModule.has_global?("test") == false
     end
   end
+
+  describe "private api" do
+    test "make sure none of the methods are public" do
+      global_functions = DummyPrivateModule.__info__(:functions)
+      |> Enum.unzip
+      |> elem(0)
+      |> Enum.map(&Atom.to_string/1)
+      |> Enum.filter(&String.contains?(&1, "global"))
+      assert global_functions == []
+    end
+
+    test "ensure that private methods work properly" do
+      assert DummyPrivateModule.has?("test") == false
+      assert DummyPrivateModule.get("test") == nil
+      assert DummyPrivateModule.get("test", "cats") == "cats"
+      assert DummyPrivateModule.set("test", "cats") == nil
+      assert DummyPrivateModule.get("test") == "cats"
+      assert DummyPrivateModule.has?("test") == true
+      assert DummyPrivateModule.delete("test") == "cats"
+      assert DummyPrivateModule.has?("test") == false
+    end
+  end
 end
