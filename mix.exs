@@ -1,13 +1,18 @@
 defmodule Modglobal.MixProject do
   use Mix.Project
 
+  @version "0.1.0"
   def project do
     [
       app: :modglobal,
-      version: "0.1.0",
+      version: @version,
       elixir: "~> 1.6",
       start_permanent: Mix.env() == :prod,
-      deps: deps()
+      deps: deps(),
+      source_url: "https://github.com/AnilRedshift/modglobal",
+      docs: [source_ref: "v#{@version}", main: "readme", extras: ["README.md"]],
+      description: description(),
+      package: package()
     ]
   end
 
@@ -20,6 +25,18 @@ defmodule Modglobal.MixProject do
   defp deps do
     [
       {:ex_doc, "~> 0.18.3", only: :dev}
+    ]
+  end
+
+  defp description do
+    "Simple stateful key-value store for modules"
+  end
+
+  defp package do
+    [
+      maintainers: ["Anil Kulkarni"],
+      licenses: ["MIT"],
+      links: %{"Github" => "https://github.com/AnilRedshift/modglobal"}
     ]
   end
 end
