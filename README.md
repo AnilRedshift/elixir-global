@@ -15,6 +15,11 @@ end
 ```
 
 ## Usage
+
+Typically, the easiest way to use modglobal is to use get_global with a default value.
+If you use modglobal in this way, you don't need to hook up your module to your Application's children,
+as no PID is needed. This way also allows you to return `{:error, error}` on application startup if the appropriate conditions aren't held
+
 ```elixir
 defmodule Greeter do
   use Modglobal
@@ -25,6 +30,32 @@ defmodule Greeter do
 
   def greet() do
     name = get_global(:name, "world")
+    IO.puts("Hello, #{name}!")
+  end
+end
+```
+
+However, if you have state that you want to initialize right away, and don't want to stick it inside another process, you can do something like this:
+
+#### application.ex
+```elixir
+children = [
+  worker(Greeter, [])
+]
+```
+#### greeter.ex
+
+```elixir
+defmodule Greeter do
+  use Modglobal
+
+  def start_link() do
+    set_global(:name, "world")
+    :ignore
+  end
+
+  def greet() do
+    name = get_global(:name)
     IO.puts("Hello, #{name}!")
   end
 end
