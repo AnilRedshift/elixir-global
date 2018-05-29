@@ -17,7 +17,7 @@ defmodule ModglobalTest do
   doctest Modglobal
 
   setup do
-    start_supervised!({Modglobal.Server, name: Modglobal.Server})
+    start_supervised!({Modglobal.Server.Impl, name: Modglobal.Server.Impl})
     :ok
   end
 
