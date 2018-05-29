@@ -17,14 +17,12 @@ defmodule Modglobal do
   `Modglobal.set(__MODULE__, key, value)`, etc...
   """
 
-  Modglobal.Server.Impl
-
   @doc ~S"""
   Deletes a given key from the module, and returns the value deleted.
   If the key was not present, then nil is returned.
   """
   @spec delete(module(), any()) :: any()
-  def delete(module, key), do: Modglobal.Server.Impl.delete(module: module, key: key)
+  def delete(module, key), do: impl().delete(module: module, key: key)
 
   @doc ~S"""
   See get/3, where the default value is populated to be nil
@@ -37,20 +35,22 @@ defmodule Modglobal do
   If the key is not present, then the default value is returned
   """
   @spec get(module(), any(), any()) :: any()
-  def get(module, key, default), do: Modglobal.Server.Impl.get(module: module, key: key, default: default)
+  def get(module, key, default), do: impl().get(module: module, key: key, default: default)
 
   @doc ~S"""
   Returns true if the key is present in the global cache, false otherwise.
   Note that this just checks the presence of the keys, even falsey values will return true
   """
   @spec has?(module(), any()) :: boolean()
-  def has?(module, key), do: Modglobal.Server.Impl.has?(module: module, key: key)
+  def has?(module, key), do: impl().has?(module: module, key: key)
 
   @doc ~S"""
   Sets the value, overwriting if necessary, to the key for the given module.
   """
   @spec set(module(), any(), any()) :: nil
-  def set(module, key, value), do: Modglobal.Server.Impl.set(module: module, key: key, value: value)
+  def set(module, key, value), do: impl().set(module: module, key: key, value: value)
+
+  defp impl, do: Application.get_env(:modglobal, :impl)
 
   defmacro __using__(options) do
     if (match?([public: :true], options)) do

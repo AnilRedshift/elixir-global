@@ -16,6 +16,14 @@ defmodule ModglobalTest do
   use ExUnit.Case, async: true
   doctest Modglobal
 
+  setup_all do
+    old_env = Application.get_env(:modglobal, :impl)
+    Application.put_env(:modglobal, :impl, Modglobal.Server.Impl)
+    on_exit fn ->
+      Application.put_env(:modglobal, :impl, old_env)
+    end
+  end
+
   setup do
     start_supervised!({Modglobal.Server.Impl, name: Modglobal.Server.Impl})
     :ok
