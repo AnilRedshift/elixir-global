@@ -1,5 +1,7 @@
 defmodule ModglobalTest do
   alias Modglobal.Mock
+  use ExUnit.Case
+  doctest Modglobal
 
   defmodule DummyModule do
     use Modglobal, public: true
@@ -14,8 +16,6 @@ defmodule ModglobalTest do
     def set(key, value), do: set_global(key, value)
   end
 
-  use ExUnit.Case
-  doctest Modglobal
 
   describe "get" do
     test "returns the passed in default" do
