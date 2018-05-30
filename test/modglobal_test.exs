@@ -1,69 +1,62 @@
-defmodule DummyModule do
-  use Modglobal, public: true
-end
-
-defmodule DummyPrivateModule do
-  use Modglobal
-  def delete(key), do: delete_global(key)
-  def get(key), do: get_global(key)
-  def has?(key), do: has_global?(key)
-  def get(key, default), do: get_global(key, default)
-  def set(key, value), do: set_global(key, value)
-end
-
 defmodule ModglobalTest do
-
-  use ExUnit.Case, async: true
+  alias Modglobal.Mock
+  use ExUnit.Case
   doctest Modglobal
 
-  setup do
-    start_supervised!({Modglobal.Server, name: Modglobal.Server})
-    :ok
+  defmodule DummyModule do
+    use Modglobal, public: true
   end
+
+  defmodule DummyPrivateModule do
+    use Modglobal
+    def delete(key), do: delete_global(key)
+    def get(key), do: get_global(key)
+    def has?(key), do: has_global?(key)
+    def get(key, default), do: get_global(key, default)
+    def set(key, value), do: set_global(key, value)
+  end
+
 
   describe "get" do
     test "returns the passed in default" do
+      Mock.setup(DummyModule, [
+        {:get, [key: "test", default: "cat"], "cat"}
+      ])
       assert DummyModule.get_global("test", "cat") == "cat"
     end
 
     test "returns nil if a default isn't present" do
+      Mock.setup(DummyModule, [
+        {:get, [key: "test", default: nil], nil}
+      ])
       assert DummyModule.get_global("test") == nil
     end
   end
 
   describe "set" do
     test "a key to a value" do
-      DummyModule.set_global("test", "cat")
-      assert DummyModule.get_global("test") == "cat"
-    end
-
-    test "sets nil to a value" do
-      DummyModule.set_global("test", nil)
-      assert DummyModule.get_global("test", "cat") == nil
+      Mock.setup(DummyModule, [
+        {:set, [key: "test", value: "cat"], nil},
+      ])
+      assert DummyModule.set_global("test", "cat") == nil
     end
   end
 
   describe "has?" do
-    test "returns false when not present" do
-      assert DummyModule.has_global?("test") == false
-    end
-
     test "returns true when present" do
-      DummyModule.set_global("test", "cat")
+      Mock.setup(DummyModule, [
+        {:has?, [key: "test"], true},
+      ])
       assert DummyModule.has_global?("test") == true
     end
   end
 
   describe "delete" do
     test "no-ops if not present" do
+      Mock.setup(DummyModule, [
+        {:delete, [key: "test"], nil},
+      ])
       assert DummyModule.delete_global("test") == nil
-      assert DummyModule.has_global?("test") == false
-    end
-
-    test "removes the key" do
-      DummyModule.set_global("test", "cat")
-      assert DummyModule.delete_global("test") == "cat"
-      assert DummyModule.has_global?("test") == false
     end
   end
 
@@ -78,23 +71,16 @@ defmodule ModglobalTest do
     end
 
     test "ensure that private methods work properly" do
+      Mock.setup([
+        {:has?, false},
+        {:get, nil},
+        {:set, nil},
+        {:delete, "cats"}
+      ])
       assert DummyPrivateModule.has?("test") == false
       assert DummyPrivateModule.get("test") == nil
-      assert DummyPrivateModule.get("test", "cats") == "cats"
       assert DummyPrivateModule.set("test", "cats") == nil
-      assert DummyPrivateModule.get("test") == "cats"
-      assert DummyPrivateModule.has?("test") == true
       assert DummyPrivateModule.delete("test") == "cats"
-      assert DummyPrivateModule.has?("test") == false
-    end
-  end
-
-  describe "uniqueness" do
-    test "make sure that changing one modules variables doesn't affect the other" do
-      DummyModule.set_global("test", "dogs")
-      DummyPrivateModule.set("test", "cats")
-      assert DummyModule.get_global("test") == "dogs"
-      assert DummyPrivateModule.get("test") == "cats"
     end
   end
 end

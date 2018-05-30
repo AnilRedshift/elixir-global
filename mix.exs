@@ -24,7 +24,8 @@ defmodule Modglobal.MixProject do
 
   defp deps do
     [
-      {:ex_doc, "~> 0.18.3", only: :dev}
+      {:ex_doc, "~> 0.18.3", only: :dev},
+      {:mox, "~> 0.3.2"}
     ]
   end
 

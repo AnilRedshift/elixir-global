@@ -4,9 +4,17 @@ defmodule Modglobal.App do
   @impl true
   @doc false
   def start(_type, _args) do
-    children = [
-      {Modglobal.Server, name: Modglobal.Server}
-    ]
-    Supervisor.start_link(children, strategy: :one_for_one)
+    Supervisor.start_link(children(Mix.env), strategy: :one_for_one)
+  end
+
+  defp children(env) when env == :test do
+    case Application.get_env(:modglobal, :impl) do
+      Modglobal.Server.Impl -> children(:dev)
+      _ -> []
+    end
+  end
+
+  defp children(_env) do
+    [{Modglobal.Server.Impl, name: Modglobal.Server.Impl}]
   end
 end
