@@ -1,6 +1,6 @@
 defmodule Server.ImplTest do
 
-  use ExUnit.Case, async: true
+  use ExUnit.Case
   alias Modglobal.Server.Impl
 
   defmodule DummyModule do end
