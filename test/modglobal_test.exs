@@ -19,14 +19,14 @@ defmodule ModglobalTest do
 
   describe "get" do
     test "returns the passed in default" do
-      Mock.setup(Modglobal.ServerMock, DummyModule, [
+      Mock.setup(DummyModule, [
         {:get, [key: "test", default: "cat"], "cat"}
       ])
       assert DummyModule.get_global("test", "cat") == "cat"
     end
 
     test "returns nil if a default isn't present" do
-      Mock.setup(Modglobal.ServerMock, DummyModule, [
+      Mock.setup(DummyModule, [
         {:get, [key: "test", default: nil], nil}
       ])
       assert DummyModule.get_global("test") == nil
@@ -35,7 +35,7 @@ defmodule ModglobalTest do
 
   describe "set" do
     test "a key to a value" do
-      Mock.setup(Modglobal.ServerMock, DummyModule, [
+      Mock.setup(DummyModule, [
         {:set, [key: "test", value: "cat"], nil},
       ])
       assert DummyModule.set_global("test", "cat") == nil
@@ -44,7 +44,7 @@ defmodule ModglobalTest do
 
   describe "has?" do
     test "returns true when present" do
-      Mock.setup(Modglobal.ServerMock, DummyModule, [
+      Mock.setup(DummyModule, [
         {:has?, [key: "test"], true},
       ])
       assert DummyModule.has_global?("test") == true
@@ -53,7 +53,7 @@ defmodule ModglobalTest do
 
   describe "delete" do
     test "no-ops if not present" do
-      Mock.setup(Modglobal.ServerMock, DummyModule, [
+      Mock.setup(DummyModule, [
         {:delete, [key: "test"], nil},
       ])
       assert DummyModule.delete_global("test") == nil
@@ -71,7 +71,7 @@ defmodule ModglobalTest do
     end
 
     test "ensure that private methods work properly" do
-      Mock.setup(Modglobal.ServerMock, [
+      Mock.setup([
         {:has?, false},
         {:get, nil},
         {:set, nil},
