@@ -85,4 +85,6 @@ where the format is `Mock.setup(MODULE_NAME, commands)`,
 
 and each command is a tuple of `{command_name, args, return value}` corresponding to the appropriate data passed into the `Modglobal.Server.Impl` functions.
 
-You can customize this by overriding the `:modglobal, :impl` environment and implementing your own definition of `Modglobal.Server`
+You can customize this by overriding the `:modglobal, :impl` environment and implementing your own definition of `Modglobal.Server`.
+  
+For example, to use the real Modglobal in your tests, add this line to your config.exs `config :modglobal, impl: Modglobal.Server.Impl`
