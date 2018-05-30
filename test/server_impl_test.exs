@@ -2,6 +2,7 @@ defmodule Server.ImplTest do
 
   use ExUnit.Case
   alias Modglobal.Server.Impl
+  doctest Modglobal.Server.Impl
 
   defmodule DummyModule do end
   defmodule OtherDummyModule do end
