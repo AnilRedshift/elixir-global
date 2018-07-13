@@ -12,6 +12,7 @@ defmodule ModglobalTest do
     def delete(key), do: delete_global(key)
     def get(key), do: get_global(key)
     def has?(key), do: has_global?(key)
+    def increment(key), do: increment_global(key)
     def get(key, default), do: get_global(key, default)
     def set(key, value), do: set_global(key, value)
   end
@@ -51,6 +52,15 @@ defmodule ModglobalTest do
     end
   end
 
+  describe "increment" do
+    test "starts off at 0" do
+      Mock.setup(DummyModule, [
+        {:increment, [key: "test"], 0},
+      ])
+      assert DummyModule.increment_global("test") == 0
+    end
+  end
+
   describe "delete" do
     test "no-ops if not present" do
       Mock.setup(DummyModule, [
@@ -75,12 +85,14 @@ defmodule ModglobalTest do
         {:has?, false},
         {:get, nil},
         {:set, nil},
-        {:delete, "cats"}
+        {:delete, "cats"},
+        {:increment, 0}
       ])
       assert DummyPrivateModule.has?("test") == false
       assert DummyPrivateModule.get("test") == nil
       assert DummyPrivateModule.set("test", "cats") == nil
       assert DummyPrivateModule.delete("test") == "cats"
+      assert DummyPrivateModule.increment("test2") == 0
     end
   end
 end

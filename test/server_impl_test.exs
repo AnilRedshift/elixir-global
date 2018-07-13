@@ -49,6 +49,17 @@ defmodule Server.ImplTest do
     end
   end
 
+  describe "increment" do
+    test "starts with 0 when not defined" do
+      assert Impl.increment(module: DummyModule, key: "test") == 0
+    end
+
+    test "Subsequent calls return 1" do
+      Impl.increment(module: DummyModule, key: "test")
+      assert Impl.increment(module: DummyModule, key: "test") == 1
+    end
+  end
+
   describe "delete" do
     test "no-ops if not present" do
       assert Impl.delete(module: DummyModule, key: "test") == nil

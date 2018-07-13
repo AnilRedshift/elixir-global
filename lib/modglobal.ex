@@ -47,6 +47,12 @@ defmodule Modglobal do
   def has?(module, key), do: impl().has?(module: module, key: key)
 
   @doc ~S"""
+  Increments an integer by 1 atomically, and returns the previous value. The initial value is 0, if the key is not already set
+  """
+  @spec increment(module(), any()) :: any()
+  def increment(module, key), do: impl().increment(module: module, key: key)
+
+  @doc ~S"""
   Sets the value, overwriting if necessary, to the key for the given module.
   """
   @spec set(module(), any(), any()) :: nil
@@ -59,6 +65,7 @@ defmodule Modglobal do
         def get_global(key), do: Modglobal.get(__MODULE__, key)
         def get_global(key, default), do: Modglobal.get(__MODULE__, key, default)
         def has_global?(key), do: Modglobal.has?(__MODULE__, key)
+        def increment_global(key), do: Modglobal.increment(__MODULE__, key)
         def set_global(key, value), do: Modglobal.set(__MODULE__, key, value)
       end
     else
@@ -67,6 +74,7 @@ defmodule Modglobal do
         defp get_global(key), do: Modglobal.get(__MODULE__, key)
         defp get_global(key, default), do: Modglobal.get(__MODULE__, key, default)
         defp has_global?(key), do: Modglobal.has?(__MODULE__, key)
+        defp increment_global(key), do: Modglobal.increment(__MODULE__, key)
         defp set_global(key, value), do: Modglobal.set(__MODULE__, key, value)
       end
     end

@@ -6,6 +6,7 @@ defmodule Modglobal.Server do
   @callback delete([module: module(), key: key()]) :: value() | nil
   @callback get([module: module(), key: key(), default: value()]) :: value()
   @callback has?([module: module(), key: key()]) :: boolean()
+  @callback increment([module: module(), key: key()]) :: value()
   @callback set([module: module(), key: key(), value: value()]) :: nil
 
   def impl() do

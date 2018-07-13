@@ -34,6 +34,13 @@ defmodule Modglobal.Server.Impl do
   end
 
   @impl true
+  def handle_call({:increment, module: module, key: key}, from, state) do
+    {:reply, value, _state} = handle_call({:get, module: module, key: key, default: 0}, from, state)
+    state = put_in(state, [Access.key(module, %{}), key], value + 1)
+    {:reply, value, state}
+  end
+
+  @impl true
   def handle_call({:set, module: module, key: key, value: value}, _from, state) do
     state = put_in(state, [Access.key(module, %{}), key], value)
     {:reply, nil, state}
@@ -49,8 +56,10 @@ defmodule Modglobal.Server.Impl do
   def has?([module: _, key: _] = args), do: call(:has?, args)
 
   @impl true
-  def set([module: _, key: _, value: _] = args), do: call(:set, args)
+  def increment([module: _, key: _] = args), do: call(:increment, args)
 
+  @impl true
+  def set([module: _, key: _, value: _] = args), do: call(:set, args)
 
   defp call(command, args) do
     apply(GenServer, :call, [__MODULE__, {command, args}])
