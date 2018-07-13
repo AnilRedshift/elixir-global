@@ -9,7 +9,7 @@ Full documentation: [https://hexdocs.pm/modglobal](https://hexdocs.pm/modglobal)
 ```elixir
 def deps do
   [
-    {:modglobal, "~> 0.2.2"}
+    {:modglobal, "~> 0.2.3"}
   ]
 end
 ```
