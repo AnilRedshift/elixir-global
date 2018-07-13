@@ -8,7 +8,7 @@ defmodule Modglobal.App do
   end
 
   defp children(env) when env == :test do
-    case Application.get_env(:modglobal, :impl) do
+    case Modglobal.Server.impl() do
       Modglobal.Server.Impl -> children(:dev)
       _ -> []
     end

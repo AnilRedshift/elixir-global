@@ -17,6 +17,8 @@ defmodule Modglobal do
   `Modglobal.set(__MODULE__, key, value)`, etc...
   """
 
+  import Modglobal.Server, only: [impl: 0]
+
   @doc ~S"""
   Deletes a given key from the module, and returns the value deleted.
   If the key was not present, then nil is returned.
@@ -49,8 +51,6 @@ defmodule Modglobal do
   """
   @spec set(module(), any(), any()) :: nil
   def set(module, key, value), do: impl().set(module: module, key: key, value: value)
-
-  defp impl, do: Application.get_env(:modglobal, :impl)
 
   defmacro __using__(options) do
     if (match?([public: :true], options)) do
